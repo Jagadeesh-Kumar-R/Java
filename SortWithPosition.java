@@ -1,9 +1,9 @@
 import java.util.*;
 public class Main{
-    public static void SortWithPosition(String[] args){
+    public static void main(String[] args){
         Scanner scan=new Scanner(System.in);
-        String s=scan.next();
-        String[] str=s.split(",");
+        String s=scan.nextLine();
+        String[] str=s.split("[, ]");
         ArrayList<Integer> list1=new ArrayList<Integer>();
         ArrayList<Integer> list2=new ArrayList<Integer>();
         for(int i=0;i<str.length;i++){
@@ -23,7 +23,11 @@ public class Main{
             ans[i*2+1]=list2.get(i);
         }
         for(int i=0;i<str.length;i++){
-            System.out.print(ans[i]+",");
+            if(i+1==str.length){
+                System.out.print(ans[i]);
+            }else{
+                System.out.print(ans[i]+",");
+            }
         }
         
     }
