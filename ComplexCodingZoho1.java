@@ -12,7 +12,7 @@
 -If no taxi is free at that time, booking is rejected*/
 
 import java.util.*;
-public class ComplexCodingZoho1{
+public class Main{
     public static void main(String[] args){
         Scanner scan=new Scanner(System.in);
         int n=0;
@@ -38,12 +38,36 @@ public class ComplexCodingZoho1{
             System.out.println("amount:"+a);
             int RT=reachTime(d,PT);
             System.out.println("Reached Time:"+RT);
+            int IA=allot(taxi,DP,PP);
+            System.out.println("Taxi "+IA+" is allotted.");
             System.out.println("--------------");
-            allot(taxi);
         }
     }
-    public static void allot(ArrayList<Integer><Character> taxi){
-        
+    public static int allot(HashMap<Integer,Character> taxi,char DP,char PP){
+        for(int i=1;i<=4;i++){          //Allot when taxi is available at that location
+            if(taxi.containsKey(i)&&taxi.get(i)==PP){
+                taxi.put(i,DP);
+                System.out.println("Taxi can be allotted.");
+                return i;
+            }
+        }
+        int IA=initialAllot(taxi,DP);               //Allot when free taxi is available
+        if(IA==0){
+            //Do Something
+        }else{
+            return IA;
+        }
+        return 0;
+    }
+    public static int initialAllot(HashMap<Integer,Character> taxi,char DP){
+            for(int i=1;i<=4;i++){
+                if(!taxi.containsKey(i)){
+                    taxi.put(i,DP);
+                    System.out.println("Taxi can be allotted.");
+                    return i;
+                }
+            }
+        return 0;
     }
     public static int distance(char PP,char DP){
         int d;
