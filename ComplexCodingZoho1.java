@@ -12,7 +12,7 @@
 -If no taxi is free at that time, booking is rejected*/
 
 import java.util.*;
-public class Main{
+public class ComplexCodingZoho1{
     public static void main(String[] args){
         Scanner scan=new Scanner(System.in);
         int n=0;
@@ -21,6 +21,7 @@ public class Main{
         char DP='\0';
         int PT=0;
         HashMap<Integer,Character> taxi=new HashMap<Integer,Character>();
+        int[][] taxiDetails=new int[4][3];
         while(scan.hasNext()){
             n=scan.nextInt();
             System.out.println("input:"+n);
@@ -33,23 +34,42 @@ public class Main{
             PT=scan.nextInt();
             System.out.println("Pickup time:"+PT);
             int d=distance(PP,DP);
-            System.out.println("distance:"+d);
             int a=amount(d);
-            System.out.println("amount:"+a);
             int RT=reachTime(d,PT);
+            int IA=allot(taxi,DP,PP,taxiDetails,PT);
+            taxiDetails[IA-1][0]=d;
+            System.out.println();
+            System.out.println("distance:"+d);
+            taxiDetails[IA-1][1]=taxiDetails[IA-1][1]+a;
+            System.out.println("amount:"+a);
+            taxiDetails[IA-1][2]=RT;
             System.out.println("Reached Time:"+RT);
-            int IA=allot(taxi,DP,PP);
             System.out.println("Taxi "+IA+" is allotted.");
             System.out.println("--------------");
         }
     }
-    public static int allot(HashMap<Integer,Character> taxi,char DP,char PP){
+    
+    public static int allot(HashMap<Integer,Character> taxi,char DP,char PP,int[][] taxiDetails,int PT){
+        int low=0,taxiNo=0;
         for(int i=1;i<=4;i++){          //Allot when taxi is available at that location
             if(taxi.containsKey(i)&&taxi.get(i)==PP){
-                taxi.put(i,DP);
-                System.out.println("Taxi can be allotted.");
-                return i;
+                if(taxiDetails[i-1][2]<=PT){      //If taxi alloted to the same distination reached the destination before booking other booking of same taxi
+                    if(low==0){
+                        low=taxiDetails[i-1][1];
+                        taxiNo=i;
+                    }
+                    if(low>taxiDetails[i-1][1]){
+                        low=taxiDetails[i-1][1];
+                        taxiNo=i;
+                    }
+                    
+                }
             }
+        }
+        if(taxiNo!=0){
+            taxi.put(taxiNo,DP);
+            System.out.println("Taxi can be allotted.");
+            return taxiNo;
         }
         int IA=initialAllot(taxi,DP);               //Allot when free taxi is available
         if(IA==0){
@@ -59,6 +79,7 @@ public class Main{
         }
         return 0;
     }
+    
     public static int initialAllot(HashMap<Integer,Character> taxi,char DP){
             for(int i=1;i<=4;i++){
                 if(!taxi.containsKey(i)){
