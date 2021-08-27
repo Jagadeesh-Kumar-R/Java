@@ -12,7 +12,7 @@
 -If no taxi is free at that time, booking is rejected*/
 
 import java.util.*;
-public class Main{
+public class ComplexCodingZoho1{
     public static void main(String[] args){
         Scanner scan=new Scanner(System.in);
         int n=0;
@@ -143,3 +143,47 @@ public class Main{
         return RT;
     }
 }
+
+//Input:
+/*
+1
+1
+A
+B
+9
+2
+2
+A
+C
+9
+3
+3
+B
+C
+10
+4
+4
+C
+D
+11
+5
+5
+A
+D
+9
+6
+6
+A
+E
+9
+7
+7
+E
+B
+12
+8
+8
+F
+A
+13
+*/
