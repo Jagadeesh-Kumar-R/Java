@@ -12,7 +12,7 @@
 -If no taxi is free at that time, booking is rejected*/
 
 import java.util.*;
-public class ComplexCodingZoho1{
+public class Main{
     public static void main(String[] args){
         Scanner scan=new Scanner(System.in);
         int n=0;
@@ -49,20 +49,39 @@ public class ComplexCodingZoho1{
         }
     }
     
+    public static int chooseTaxiByAmount(int low,int i,int taxiNo,int[][] taxiDetails){
+        if(low==0){
+            System.out.println(low+" "+taxiDetails[i-1][1]);
+                low=taxiDetails[i-1][1];
+                taxiNo=i;
+        }
+        if(low>taxiDetails[i-1][1]){
+            low=taxiDetails[i-1][1];
+            taxiNo=i;
+        }
+        return taxiNo;
+    }
+    
+    public static int chooseTaxiByDistance(int i,char PP,int lowDistance,HashMap<Integer,Character> taxi,int taxiNo){
+        if(lowDistance==0){
+            lowDistance=distance(PP,taxi.get(i));
+            return i;
+        }else{
+            if(distance(PP,taxi.get(i))<=lowDistance){
+                lowDistance=distance(PP,taxi.get(i));
+                return i;
+            }
+        }
+        return taxiNo;
+    }
+    
     public static int allot(HashMap<Integer,Character> taxi,char DP,char PP,int[][] taxiDetails,int PT){
         int low=0,taxiNo=0;
         for(int i=1;i<=4;i++){          //Allot when taxi is available at that location
             if(taxi.containsKey(i)&&taxi.get(i)==PP){
                 if(taxiDetails[i-1][2]<=PT){      //If taxi alloted to the same distination reached the destination before booking other booking of same taxi
-                    if(low==0){
-                        low=taxiDetails[i-1][1];
-                        taxiNo=i;
-                    }
-                    if(low>taxiDetails[i-1][1]){
-                        low=taxiDetails[i-1][1];
-                        taxiNo=i;
-                    }
-                    
+                    taxiNo=chooseTaxiByAmount(low,i,taxiNo,taxiDetails);
+                    low=taxiDetails[taxiNo-1][1];
                 }
             }
         }
@@ -71,13 +90,28 @@ public class ComplexCodingZoho1{
             System.out.println("Taxi can be allotted.");
             return taxiNo;
         }
-        int IA=initialAllot(taxi,DP);               //Allot when free taxi is available
+        int IA=initialAllot(taxi,DP),lowDistance=0;               //Allot when free taxi is available
         if(IA==0){
+            for(int i=1;i<=4;i++){
+                if(taxiDetails[i-1][2]<=PT){
+                    IA=chooseTaxiByDistance(i,PP,lowDistance,taxi,IA);
+                    if(lowDistance>distance(PP,taxi.get(IA))){
+                        low=0;
+                    }
+                    lowDistance=distance(PP,taxi.get(IA));
+                    taxiNo=chooseTaxiByAmount(low,IA,taxiNo,taxiDetails);
+                    low=taxiDetails[taxiNo-1][1];
+                    System.out.println(i+" "+lowDistance+" "+taxi.get(i)+" "+taxiDetails[i-1][2]+" "+PT+" "+taxiDetails[i-1][1]+" "+taxiNo+" "+low+" "+taxiDetails[taxiNo-1][1]);
+                    //Do Something
+                }
+            }
+            taxi.put(taxiNo,DP);
+            return taxiNo;
             //Do Something
+            
         }else{
             return IA;
         }
-        return 0;
     }
     
     public static int initialAllot(HashMap<Integer,Character> taxi,char DP){
@@ -93,6 +127,7 @@ public class ComplexCodingZoho1{
     public static int distance(char PP,char DP){
         int d;
         d=(DP-PP)*15;
+        d=(d>0)?d:-d;
         return d;
     }
     public static int amount(int d){
